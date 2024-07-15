@@ -1,4 +1,4 @@
-package aws
+package repository
 
 import (
 	"context"
@@ -18,41 +18,15 @@ func NewSchedulerRepository(client *scheduler.Client) *SchedulerRepository {
 	return &SchedulerRepository{client: client}
 }
 
-func createSchedule(client *scheduler.Client) {
+func (r *SchedulerRepository) Create(schedule *entity.Schedule) (string, error) {
+	input := schedule.ToCreateScheduleInput()
 
-	// clientToken := "token"
-	// arn := "arn:aws:lambda:us-west-2:123456789012:function:my-function"
-	// roleArn := "arn:aws:iam::123456789012:role/MyRole"
-	// timezone := "JST"
+	output, err := r.client.CreateSchedule(context.TODO(), input)
+	if err != nil {
+		return "", fmt.Errorf("failed to create schedule, %w", err)
+	}
 
-	// // ref. https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/service/scheduler#CreateScheduleInput
-	// input := &scheduler.CreateScheduleInput{
-	// 	ClientToken: &clientToken,
-
-	// 	Name:        aws.String("MySchedule"),
-	// 	GroupName:   aws.String("MyGroup"),
-	// 	Description: aws.String("MyDescription"),
-
-	// 	ScheduleExpression:         aws.String("at(2021-12-31T23:59:59)"),
-	// 	ScheduleExpressionTimezone: &timezone,
-	// 	FlexibleTimeWindow: &types.FlexibleTimeWindow{
-	// 		Mode: types.FlexibleTimeWindowModeOff,
-	// 	},
-
-	// 	Target: &types.Target{
-	// 		Arn:     &arn,
-	// 		RoleArn: &roleArn,
-	// 	},
-
-	// 	ActionAfterCompletion: types.ActionAfterCompletionDelete,
-	// }
-
-	// result, err := client.CreateSchedule(context.TODO(), input)
-	// if err != nil {
-	// 	log.Fatalf("failed to create schedule, %v", err)
-	// }
-
-	// fmt.Printf("Created schedule: %s\n", *result.ScheduleArn)
+	return *output.ScheduleArn, nil
 }
 
 func (r *SchedulerRepository) ListAll() ([]*types.ScheduleSummary, error) {
