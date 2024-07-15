@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aki-nishikawa/event-bridge-scheduler-go/entity"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/scheduler"
 	"github.com/aws/aws-sdk-go-v2/service/scheduler/types"
@@ -78,6 +79,25 @@ func (r *SchedulerRepository) ListAll() ([]*types.ScheduleSummary, error) {
 	return schedules, nil
 }
 
-func deleteSchedule(client *scheduler.Client) {
-	panic("unimplemented")
+func (r *SchedulerRepository) Get(name, groupName string) (*entity.Schedule, error) {
+	input := &scheduler.GetScheduleInput{
+		Name:      aws.String(name),
+		GroupName: aws.String(groupName),
+	}
+
+	output, err := r.client.GetSchedule(context.TODO(), input)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get schedule, %w", err)
+	}
+
+	schedule, err := entity.NewScheduleFromGetScheduleOutput(output)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create schedule entity, %w", err)
+	}
+
+	return schedule, nil
 }
+
+// TODO: Update
+
+// TODO: Delete

@@ -24,7 +24,16 @@ func main() {
 		log.Printf(" Name: %s, Arn: %s\n", *schedule.Name, *schedule.Arn)
 	}
 
-	// TODO: Get a schedule by ARN
+	// Get a schedule
+	scheduleName := schedules[0].Name
+	scheduleGroupName := schedules[0].GroupName
+
+	schedule, err := schedulerRepository.Get(*scheduleName, *scheduleGroupName)
+	if err != nil {
+		log.Fatalf("failed to get schedule, %v", err)
+	}
+
+	log.Printf("Schedule: Name: %s, ScheduledAt: %s\n", *schedule.Name, schedule.ScheduledAt)
 
 	// TODO: Update a schedule
 
