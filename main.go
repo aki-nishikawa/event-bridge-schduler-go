@@ -70,5 +70,5 @@ func getSchedule(r *repository.SchedulerRepository) {
 		log.Fatalf("failed to get schedule, %v", err)
 	}
 
-	log.Printf("Schedule: Name: %s, ScheduledAt: %s\n", schedule.Name, schedule.ScheduledAt)
+	log.Printf("Schedule: Name: %s, ScheduledAt: %s, LambdaInput: %s\n", schedule.Name, schedule.ScheduledAt, schedule.LambdaInput)
 }

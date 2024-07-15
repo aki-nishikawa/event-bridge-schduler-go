@@ -66,6 +66,7 @@ func NewScheduleFromGetScheduleOutput(output *scheduler.GetScheduleOutput) (*Sch
 	return &Schedule{
 		Name:        *output.Name,
 		ScheduledAt: scheduledAt,
+		LambdaInput: *output.Target.Input,
 	}, nil
 }
 
