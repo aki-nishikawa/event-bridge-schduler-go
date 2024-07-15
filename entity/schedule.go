@@ -13,7 +13,7 @@ import (
 type Schedule struct {
 	Name        string
 	ScheduledAt time.Time
-	// 本当は lambda を呼び出す際のパラメータ
+	LambdaInput string
 }
 
 func (s *Schedule) ToCreateScheduleInput() *scheduler.CreateScheduleInput {
@@ -33,7 +33,10 @@ func (s *Schedule) ToCreateScheduleInput() *scheduler.CreateScheduleInput {
 		Target: &types.Target{
 			Arn:     &lambdaArn,
 			RoleArn: &schedulerRoleArn,
-			Input:   aws.String("{}"), // 本当は lambda を呼び出す際のパラメータ
+			Input:   aws.String(s.LambdaInput), // 本当は lambda を呼び出す際のパラメータ
+			RetryPolicy: &types.RetryPolicy{
+				MaximumRetryAttempts: aws.Int32(0), // リトライしない
+			},
 		},
 		ScheduleExpression: aws.String(expression),
 

@@ -23,10 +23,10 @@ func main() {
 	createSchedule(schedulerRepository)
 
 	// List all schedules
-	// listAllSchedule(schedulerRepository)
+	listAllSchedule(schedulerRepository)
 
 	// Get a schedule
-	// getSchedule(schedulerRepository)
+	getSchedule(schedulerRepository)
 
 	// TODO: Update a schedule
 
@@ -38,6 +38,7 @@ func createSchedule(r *repository.SchedulerRepository) {
 	schedule := &entity.Schedule{
 		Name:        "nishikawa-test-from-golang",
 		ScheduledAt: time.Date(2025, 7, 15, 23, 59, 59, 0, time.UTC),
+		LambdaInput: "{}",
 	}
 
 	scheduleArn, err := r.Create(schedule)
